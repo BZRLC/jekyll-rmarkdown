@@ -1,0 +1,21 @@
+# Site settings
+title: BZRLC
+description: Bruce Zhao R Learning Community
+email: brucezhaor2016@gmail.com
+baseurl: ""  # the subpath of your site, e.g. /blog
+url: "http://bzrlc.github.io" # the base hostname & protocol for your site
+include: []
+
+# Build settings
+timezone: Asia/Shanghai
+paginate: 8 # pagination based on number of posts
+paginate_path: "page:num"
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  input: GFM
+
+gems: [jekyll-paginate]
+
+github_username:  BZRLC
+

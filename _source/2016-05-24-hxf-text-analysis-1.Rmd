@@ -1,0 +1,63 @@
+---
+layout: post
+title: "文本分析初探-1"
+author: "韩旭峰"
+date: "24 May 2016"
+---
+
+```{r setup, include=FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>",eval = F)
+```
+
+## 开始 
+为什么要从文本分析开始，其实我并不打算以后做这个。但人总是会做矛盾的事情，我相当缺乏去主攻一个方向的自信，只是抱着不在一颗树上吊死的念头随便看了看。张志刚老师建议我多去研究量化投资方面的内容，我以后会去多看看这个方面，我现在只是知道有这么个东西而已，有想法和我一起尝试的人我非常欢迎。
+
+言归正转，为什么我要从文本分析开始整理，因为我觉得它逼格赛高，讲文本分析的资料非常少，这样来和我撕逼的人应该也比会少了
+。
+我手上有一份从京东，当当，和携程网上爬去下来的一些用户的评论。当然不是我爬的，是我用百度网盘下载的，其实我也不是不会用爬虫……好吧，我就是不会，反正我是没有办法爬的这么干净的，有机会爬虫我也可以给大家试一下。
+
+再次言归正传（我这样的菜鸟就是干货少，废话多，麻烦大家习惯一下）。
+
+首先我们看看怎么读入文件(除非特别声明，我使用的软件都是R)。
+
+```{r}
+#获取文本路径
+reviewpath<-("F:/study/新建文件夹/rawdata/review_sentiment/train2")
+
+completepath <- list.files(reviewpath, pattern = "*.txt$", full.names = TRUE)
+
+# 注意是左斜杠,但是也是可以用 "\\"
+reviewpath <- ("F:/study/新建文件夹/rawdata/review_sentiment/train2")
+```
+
+list.files函数获取该路径下所有文件的文件名，如果full.names参数为真，则返回完整的路径，反之返回文件名称，pattern是一个匹配函数，用来匹配指定的文件（更多有关匹配原理和规则请自行参考正则表达式），这里仅匹配以.txt结尾的文件。
+
+
+## 批量读入文本
+ 
+这里为批量读取文件构造了一个函数，目的是把每一个TXT文件的目录加载进来并粘贴在一起。第一行代码构造了一个自编函数，第二行readLines
+函数逐行读取文件目录，第三行将目录以空格粘贴在一起，collapse
+就是连接方式参数。最后用lapply函数按目录逐行读取文件(**ply系列的函数可能一开始很难理解，我会把资料一起上传的)。
+
+如果你想编一个循环来代替这个步骤，那你真的是LOW爆了，不到万不得已R里不要用循环，多用向量化的思维。最后一行的报错我也不知道是什么意思，反正到最后都没什么影响。
+
+```{r}
+######list转数据框
+docname<-list.files(reviewpath,pattern="*.txt$")
+reviewdf <- as.data.frame(cbind(docname, unlist(review))  , stringsAsFactors = F) 
+colnames(reviewdf) <- c("id", "words")
+reviewdf$words <- gsub(pattern = " ", replacement ="", reviewdf$words)
+reviewdf$words <- gsub("\t", "", reviewdf$words)
+reviewdf$words <- gsub(",", "，", reviewdf$words)
+reviewdf$words <- gsub("~|'", "", reviewdf$words)
+reviewdf$words <- gsub("\\\"", "", reviewdf$words)
+```
+
+
+1行读取文件名称；2行名称和文本内容按列（cbind）捆绑在一起成为一个新的数据框；3行修改列名；4行移除文本中的所有空格。gsub函数第一个参数指定正则表达式模式，第二个参数为替代内容，5、6行替换所有的\t和英文逗号，因为csv各式的文档以英文逗号为分隔符，文中有英文逗号会报错，除了英文逗号可能引起read.csv函数读取csv文件报错以外，还有英文单引号（'）、英文双引号（"）、波浪号（~），都会引起读取时发生警告，带来csv文件或txt文件读取不完整的后果，因此，7行依次替换了波浪号（~）和英文单引号（'），它们之间用“|”符号隔开，表示或的关系；8行替换所有的英文双引号（"），因为双引号在R中有特殊含义，所以要使用三个斜杠（\\\）转义。
+  到此为止，数据的前期处理部分算是完成了，大概把文本文件整理成了这个格式 
+
+## End
+
+这一次的内容就告一段落了，预知后事如何，请听下回分解。
+

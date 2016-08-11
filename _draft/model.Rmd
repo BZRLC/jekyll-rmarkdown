@@ -1,0 +1,11 @@
+---
+layout: post
+title: "数据探索性分析"
+author: "Elle.Liu"
+date: "9 March 2016"
+---
+
+```{r setup, include=FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+```
+
