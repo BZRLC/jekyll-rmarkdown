@@ -1,7 +1,6 @@
-# R & Git Learning Community
+# 存档使用servr::jekyll 渲染rmarkdown搭建博客方法。
 
-欢迎来到R & Git Learning Community，具体说明请看这里：http://bzrlc.github.io/about/ .
-
+此文件夹亲测有效，因为不适合团队一起协作，还是写markdown来的方便一点，所以暂时存档以备不时之需。
 
 ## 使用方法
 
